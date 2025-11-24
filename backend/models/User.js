@@ -1,144 +1,251 @@
-const mongoose = require('mongoose');
+const { createClient } = require('@supabase/supabase-js');
 
-const userSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        required: [true, 'Please add a name'],
-        trim: true,
-        maxlength: [50, 'Name cannot be more than 50 characters']
-    },
-    email: {
-        type: String,
-        required: [true, 'Please add an email'],
-        unique: true,
-        lowercase: true,
-        match: [
-            /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/,
-            'Please add a valid email'
-        ]
-    },
-    phone: {
-        type: String,
-        trim: true
-    },
-    interest: {
-        type: String,
-        enum: ['shopping', 'food', 'payments', 'all'],
-        default: 'all'
-    },
-    referralCode: {
-        type: String,
-        unique: true,
-        sparse: true
-    },
-    referredBy: {
-        type: String
-    },
-    waitlistPosition: {
-        type: Number,
-        index: true
-    },
-    earlyAccess: {
-        type: Boolean,
-        default: false
-    },
-    emailVerified: {
-        type: Boolean,
-        default: false
-    },
-    subscription: {
-        type: String,
-        enum: ['free', 'premium'],
-        default: 'free'
-    },
-    metadata: {
-        ipAddress: String,
-        userAgent: String,
-        signupSource: {
-            type: String,
-            default: 'website'
-        }
-    }
-}, {
-    timestamps: true
-});
+// Initialize Supabase client
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
-// Generate referral code before saving
-userSchema.pre('save', async function(next) {
-    if (!this.referralCode) {
-        let uniqueCode;
-        let isUnique = false;
-        
-        while (!isUnique) {
-            uniqueCode = this.generateReferralCode();
-            const existingUser = await mongoose.model('User').findOne({ referralCode: uniqueCode });
-            if (!existingUser) {
-                isUnique = true;
-            }
-        }
-        
-        this.referralCode = uniqueCode;
-    }
-
-    // Set waitlist position if not set
-    if (!this.waitlistPosition) {
-        const count = await mongoose.model('User').countDocuments();
-        this.waitlistPosition = count + 1;
-        
-        // Grant early access to first 1000 users
-        if (this.waitlistPosition <= 1000) {
-            this.earlyAccess = true;
-        }
-    }
-
-    next();
-});
-
-// Generate random referral code
-userSchema.methods.generateReferralCode = function() {
+class User {
+  // Generate random referral code
+  static generateReferralCode() {
     const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
     let result = 'ONE';
     for (let i = 0; i < 6; i++) {
-        result += chars.charAt(Math.floor(Math.random() * chars.length));
+      result += chars.charAt(Math.floor(Math.random() * chars.length));
     }
     return result;
-};
+  }
 
-// Static method to get waitlist stats
-userSchema.statics.getWaitlistStats = async function() {
-    const totalUsers = await this.countDocuments();
-    const earlyAccessUsers = await this.countDocuments({ earlyAccess: true });
-    
-    const interestStats = await this.aggregate([
-        {
-            $group: {
-                _id: '$interest',
-                count: { $sum: 1 }
-            }
+  // Create new user
+  static async create(userData) {
+    try {
+      console.log('Creating user with data:', userData);
+
+      // Get current user count for waitlist position
+      const { count, error: countError } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) {
+        console.error('Count error:', countError);
+        throw countError;
+      }
+
+      const waitlistPosition = (count || 0) + 1;
+      const earlyAccess = waitlistPosition <= 1000;
+      
+      // Generate referral code
+      let referralCode;
+      let isUnique = false;
+      let attempts = 0;
+      
+      while (!isUnique && attempts < 10) {
+        referralCode = this.generateReferralCode();
+        const { data: existingUser, error: checkError } = await supabase
+          .from('users')
+          .select('referral_code')
+          .eq('referral_code', referralCode)
+          .single();
+        
+        if (checkError && checkError.code === 'PGRST116') {
+          // No user found with this code - it's unique!
+          isUnique = true;
+        } else if (!checkError && !existingUser) {
+          isUnique = true;
         }
-    ]);
+        attempts++;
+      }
 
-    return {
-        totalUsers,
-        earlyAccessUsers,
-        earlyAccessSpotsLeft: Math.max(0, 1000 - earlyAccessUsers),
-        interestStats
-    };
-};
+      if (!isUnique) {
+        throw new Error('Could not generate unique referral code');
+      }
 
-// Static method to get user by referral code
-userSchema.statics.findByReferralCode = async function(code) {
-    return this.findOne({ referralCode: code });
-};
+      // Validate referral code if provided
+      if (userData.referralCode) {
+        const { data: referrer, error: refError } = await supabase
+          .from('users')
+          .select('referral_code')
+          .eq('referral_code', userData.referralCode)
+          .single();
 
-// Method to get referral stats
-userSchema.methods.getReferralStats = async function() {
-    const referralCount = await mongoose.model('User').countDocuments({ referredBy: this.referralCode });
-    return {
-        referralCode: this.referralCode,
-        referralCount,
-        rewardsEligible: referralCount >= 5
-    };
-};
+        if (refError || !referrer) {
+          throw new Error('Invalid referral code');
+        }
+      }
 
-module.exports = mongoose.models.User || mongoose.model('User', userSchema);
+      // Create user
+      const { data, error } = await supabase
+        .from('users')
+        .insert([
+          {
+            name: userData.name,
+            email: userData.email.toLowerCase(),
+            phone: userData.phone,
+            interest: userData.interest || 'all',
+            referral_code: referralCode,
+            referred_by: userData.referralCode,
+            waitlist_position: waitlistPosition,
+            early_access: earlyAccess,
+            ip_address: userData.metadata?.ipAddress,
+            user_agent: userData.metadata?.userAgent,
+            signup_source: userData.metadata?.signupSource || 'website'
+          }
+        ])
+        .select()
+        .single();
+
+      if (error) {
+        console.error('Insert error:', error);
+        throw error;
+      }
+
+      console.log('User created successfully:', data);
+      return { success: true, data };
+
+    } catch (error) {
+      console.error('User creation failed:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Find user by email
+  static async findByEmail(email) {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('email', email.toLowerCase())
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return { success: true, data: null }; // No user found
+        }
+        throw error;
+      }
+
+      return { success: true, data };
+
+    } catch (error) {
+      console.error('Find by email error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Find user by referral code
+  static async findByReferralCode(code) {
+    try {
+      const { data, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('referral_code', code)
+        .single();
+
+      if (error) {
+        if (error.code === 'PGRST116') {
+          return { success: true, data: null }; // No user found
+        }
+        throw error;
+      }
+
+      return { success: true, data };
+
+    } catch (error) {
+      console.error('Find by referral code error:', error);
+      return { success: false, error: error.message };
+    }
+  }
+
+  // Get waitlist statistics
+  static async getWaitlistStats() {
+    try {
+      // Total users
+      const { count: totalUsers, error: countError } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true });
+
+      if (countError) throw countError;
+
+      // Early access users
+      const { count: earlyAccessUsers, error: earlyError } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('early_access', true);
+
+      if (earlyError) throw earlyError;
+
+      // Interest statistics
+      const { data: interestStats, error: interestError } = await supabase
+        .from('users')
+        .select('interest')
+        .group('interest');
+
+      if (interestError) throw interestError;
+
+      return {
+        totalUsers: totalUsers || 0,
+        earlyAccessUsers: earlyAccessUsers || 0,
+        earlyAccessSpotsLeft: Math.max(0, 1000 - (earlyAccessUsers || 0)),
+        interestStats: interestStats || []
+      };
+
+    } catch (error) {
+      console.error('Get stats error:', error);
+      throw error;
+    }
+  }
+
+  // Get all users (for admin)
+  static async getAllUsers({ page = 1, limit = 50, sort = 'created_at' } = {}) {
+    try {
+      const start = (page - 1) * limit;
+      const end = start + limit - 1;
+
+      const { data, error, count } = await supabase
+        .from('users')
+        .select('*', { count: 'exact' })
+        .order(sort, { ascending: false })
+        .range(start, end);
+
+      if (error) throw error;
+
+      return {
+        users: data || [],
+        pagination: {
+          current: page,
+          pages: Math.ceil((count || 0) / limit),
+          total: count || 0
+        }
+      };
+
+    } catch (error) {
+      console.error('Get all users error:', error);
+      throw error;
+    }
+  }
+
+  // Get referral stats for a user
+  static async getReferralStats(referralCode) {
+    try {
+      const { count, error } = await supabase
+        .from('users')
+        .select('*', { count: 'exact', head: true })
+        .eq('referred_by', referralCode);
+
+      if (error) throw error;
+
+      return {
+        referralCode,
+        referralCount: count || 0,
+        rewardsEligible: (count || 0) >= 5
+      };
+
+    } catch (error) {
+      console.error('Get referral stats error:', error);
+      throw error;
+    }
+  }
+}
+
+module.exports = User;
