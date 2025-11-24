@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OneEaze - One App. Every Service.</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+        
+        /* Header */
+        .header { background: #2563eb; color: white; padding: 2rem 1rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+        .header p { font-size: 1.2rem; margin-bottom: 1.5rem; }
+        .btn { background: white; color: #2563eb; padding: 12px 30px; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; }
+        
+        /* Sections */
+        .section { padding: 4rem 1rem; max-width: 1000px; margin: 0 auto; }
+        .section h2 { text-align: center; margin-bottom: 2rem; font-size: 2rem; }
+        
+        /* Problem Section */
+        .problem { background: #f8fafc; }
+        
+        /* Features */
+        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
+        .feature { text-align: center; padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
+        .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+        
+        /* How it Works */
+        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; }
+        .step { padding: 1.5rem; }
+        .step-number { background: #2563eb; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
+        
+        /* Waitlist */
+        .waitlist { background: #2563eb; color: white; text-align: center; }
+        .waitlist input { padding: 12px; width: 300px; max-width: 100%; border: none; border-radius: 5px; margin-right: 10px; }
+        .waitlist-btn { background: white; color: #2563eb; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; }
+        
+        /* Footer */
+        .footer { background: #1e293b; color: white; text-align: center; padding: 2rem 1rem; }
+    </style>
+</head>
+<body>
+    <!-- Header Section -->
+    <header class="header">
+        <h1>OneEaze</h1>
+        <p>One App. Every Service.</p>
+        <p>Shop, order food, and pay bills - all in one app</p>
+        <button class="btn">Join Waitlist</button>
+    </header>
+
+    <!-- Problem Section -->
+    <section class="section problem">
+        <h2>Tired of App Overload?</h2>
+        <p style="text-align: center; font-size: 1.1rem;">
+            Too many apps for shopping, food delivery, and payments?<br>
+            Different logins, separate wallets, wasted time switching between apps.
+        </p>
+    </section>
+
+    <!-- Solution Section -->
+    <section class="section">
+        <h2>OneEaze Solves Everything</h2>
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🛍️</div>
+                <h3>Shopping</h3>
+                <p>Thousands of products with fast delivery</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">🍕</div>
+                <h3>Food Delivery</h3>
+                <p>Restaurant partnerships with live tracking</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">💳</div>
+                <h3>Payments</h3>
+                <p>One secure wallet for all transactions</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="section" style="background: #f8fafc;">
+        <h2>How It Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <h3>Download</h3>
+                <p>Get the app and create your account</p>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <h3>Explore</h3>
+                <p>Shop, order food, and pay bills in one app</p>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <h3>Enjoy</h3>
+                <p>Experience seamless digital living</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Waitlist Section -->
+    <section class="section waitlist">
+        <h2>Be The First To Know</h2>
+        <p>Join our waitlist for early access and exclusive offers</p>
+        <div style="margin-top: 2rem;">
+            <input type="email" placeholder="Enter your email">
+            <button class="waitlist-btn">Notify Me</button>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 OneEaze. All rights reserved.</p>
+        <p>Your all-in-one super app solution</p>
+    </footer>
+
+    <script>
+        // Simple email collection (for demonstration)
+        document.querySelector('.waitlist-btn').addEventListener('click', function() {
+            const email = document.querySelector('input[type="email"]').value;
+            if(email) {
+                alert('Thank you! We will notify you at: ' + email);
+                document.querySelector('input[type="email"]').value = '';
+            }
+        });
+    </script>
+</body>
+</html>
