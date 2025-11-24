@@ -4,129 +4,325 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>OneEaze - One App. Every Service.</title>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        
-        /* Header */
-        .header { background: #2563eb; color: white; padding: 2rem 1rem; text-align: center; }
-        .header h1 { font-size: 2.5rem; margin-bottom: 1rem; }
-        .header p { font-size: 1.2rem; margin-bottom: 1.5rem; }
-        .btn { background: white; color: #2563eb; padding: 12px 30px; border: none; border-radius: 5px; font-size: 1.1rem; cursor: pointer; }
-        
-        /* Sections */
-        .section { padding: 4rem 1rem; max-width: 1000px; margin: 0 auto; }
-        .section h2 { text-align: center; margin-bottom: 2rem; font-size: 2rem; }
-        
-        /* Problem Section */
-        .problem { background: #f8fafc; }
-        
-        /* Features */
-        .features { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; margin-top: 2rem; }
-        .feature { text-align: center; padding: 1.5rem; background: white; border-radius: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.1); }
-        .feature-icon { font-size: 2.5rem; margin-bottom: 1rem; }
-        
-        /* How it Works */
-        .steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 2rem; text-align: center; }
-        .step { padding: 1.5rem; }
-        .step-number { background: #2563eb; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem; }
-        
-        /* Waitlist */
-        .waitlist { background: #2563eb; color: white; text-align: center; }
-        .waitlist input { padding: 12px; width: 300px; max-width: 100%; border: none; border-radius: 5px; margin-right: 10px; }
-        .waitlist-btn { background: white; color: #2563eb; padding: 12px 25px; border: none; border-radius: 5px; cursor: pointer; }
-        
-        /* Footer */
-        .footer { background: #1e293b; color: white; text-align: center; padding: 2rem 1rem; }
-    </style>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Header Section -->
-    <header class="header">
-        <h1>OneEaze</h1>
-        <p>One App. Every Service.</p>
-        <p>Shop, order food, and pay bills - all in one app</p>
-        <button class="btn">Join Waitlist</button>
-    </header>
-
-    <!-- Problem Section -->
-    <section class="section problem">
-        <h2>Tired of App Overload?</h2>
-        <p style="text-align: center; font-size: 1.1rem;">
-            Too many apps for shopping, food delivery, and payments?<br>
-            Different logins, separate wallets, wasted time switching between apps.
-        </p>
-    </section>
-
-    <!-- Solution Section -->
-    <section class="section">
-        <h2>OneEaze Solves Everything</h2>
-        <div class="features">
-            <div class="feature">
-                <div class="feature-icon">🛍️</div>
-                <h3>Shopping</h3>
-                <p>Thousands of products with fast delivery</p>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-logo">
+                <i class="fas fa-rocket"></i>
+                <span>OneEaze</span>
             </div>
-            <div class="feature">
-                <div class="feature-icon">🍕</div>
-                <h3>Food Delivery</h3>
-                <p>Restaurant partnerships with live tracking</p>
+            <div class="nav-menu">
+                <a href="#home" class="nav-link">Home</a>
+                <a href="#features" class="nav-link">Features</a>
+                <a href="#how-it-works" class="nav-link">How It Works</a>
+                <a href="#waitlist" class="nav-link">Waitlist</a>
             </div>
-            <div class="feature">
-                <div class="feature-icon">💳</div>
-                <h3>Payments</h3>
-                <p>One secure wallet for all transactions</p>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section id="home" class="hero">
+        <div class="hero-container">
+            <div class="hero-content">
+                <h1 class="hero-title">One App. <span class="highlight">Every Service.</span></h1>
+                <p class="hero-subtitle">Shop, order food, pay bills, and more - all in one seamless mobile experience. Your digital life, simplified.</p>
+                <div class="hero-buttons">
+                    <button class="btn btn-primary" onclick="scrollToSection('waitlist')">
+                        <i class="fas fa-download"></i>
+                        Join Waitlist
+                    </button>
+                    <button class="btn btn-secondary" onclick="openDemo()">
+                        <i class="fas fa-play"></i>
+                        Watch Demo
+                    </button>
+                </div>
+                <div class="hero-stats">
+                    <div class="stat">
+                        <span class="stat-number">3-in-1</span>
+                        <span class="stat-label">Services</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">AI</span>
+                        <span class="stat-label">Powered</span>
+                    </div>
+                    <div class="stat">
+                        <span class="stat-number">100%</span>
+                        <span class="stat-label">Secure</span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="app-interface">
+                            <div class="app-header">
+                                <span>OneEaze</span>
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="app-services">
+                                <div class="service-card" data-service="shopping">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span>Shopping</span>
+                                </div>
+                                <div class="service-card" data-service="food">
+                                    <i class="fas fa-utensils"></i>
+                                    <span>Food</span>
+                                </div>
+                                <div class="service-card" data-service="payments">
+                                    <i class="fas fa-wallet"></i>
+                                    <span>Payments</span>
+                                </div>
+                            </div>
+                            <div class="app-feature">
+                                <h4>AI Recommendations</h4>
+                                <p>Based on your preferences</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
-    <!-- How It Works -->
-    <section class="section" style="background: #f8fafc;">
-        <h2>How It Works</h2>
-        <div class="steps">
-            <div class="step">
-                <div class="step-number">1</div>
-                <h3>Download</h3>
-                <p>Get the app and create your account</p>
+    <!-- Problem Section -->
+    <section class="problem-section">
+        <div class="container">
+            <h2 class="section-title">Tired of <span class="highlight">App Overload</span>?</h2>
+            <div class="problem-grid">
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-mobile-alt"></i>
+                    </div>
+                    <h3>Too Many Apps</h3>
+                    <p>Your phone is cluttered with single-purpose applications for every service</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-key"></i>
+                    </div>
+                    <h3>Multiple Logins</h3>
+                    <p>Different usernames and passwords for each platform</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <h3>Separate Wallets</h3>
+                    <p>Money scattered across different payment platforms</p>
+                </div>
+                <div class="problem-card">
+                    <div class="problem-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3>Wasted Time</h3>
+                    <p>Constant switching between apps for simple daily tasks</p>
+                </div>
             </div>
-            <div class="step">
-                <div class="step-number">2</div>
-                <h3>Explore</h3>
-                <p>Shop, order food, and pay bills in one app</p>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="features-section">
+        <div class="container">
+            <h2 class="section-title">Everything You Need in <span class="highlight">One Place</span></h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <h3>E-Commerce Shopping</h3>
+                    <p>Thousands of products from electronics to groceries with fast delivery</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Wide product selection</li>
+                        <li><i class="fas fa-check"></i> Fast delivery network</li>
+                        <li><i class="fas fa-check"></i> Secure transactions</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Food Delivery</h3>
+                    <p>Restaurant partnerships with live order tracking and quick delivery</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Live order tracking</li>
+                        <li><i class="fas fa-check"></i> Restaurant reviews</li>
+                        <li><i class="fas fa-check"></i> Quick delivery</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-wallet"></i>
+                    </div>
+                    <h3>Digital Payments</h3>
+                    <p>One secure wallet for all your transactions and bill payments</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Unified wallet</li>
+                        <li><i class="fas fa-check"></i> Bill payments</li>
+                        <li><i class="fas fa-check"></i> Bank transfers</li>
+                    </ul>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <h3>AI Personalization</h3>
+                    <p>Smart recommendations based on your preferences and behavior</p>
+                    <ul class="feature-list">
+                        <li><i class="fas fa-check"></i> Smart recommendations</li>
+                        <li><i class="fas fa-check"></i> Predictive notifications</li>
+                        <li><i class="fas fa-check"></i> Personalized experience</li>
+                    </ul>
+                </div>
             </div>
-            <div class="step">
-                <div class="step-number">3</div>
-                <h3>Enjoy</h3>
-                <p>Experience seamless digital living</p>
+        </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section id="how-it-works" class="how-it-works">
+        <div class="container">
+            <h2 class="section-title">How <span class="highlight">OneEaze</span> Works</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3>Download & Sign Up</h3>
+                        <p>Get the app from App Store or Google Play and create your single account</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3>Set Up Your Wallet</h3>
+                        <p>Add your payment method once and use it across all services securely</p>
+                    </div>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3>Start Exploring</h3>
+                        <p>Shop, order food, pay bills, and enjoy seamless digital living</p>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
 
     <!-- Waitlist Section -->
-    <section class="section waitlist">
-        <h2>Be The First To Know</h2>
-        <p>Join our waitlist for early access and exclusive offers</p>
-        <div style="margin-top: 2rem;">
-            <input type="email" placeholder="Enter your email">
-            <button class="waitlist-btn">Notify Me</button>
+    <section id="waitlist" class="waitlist-section">
+        <div class="container">
+            <div class="waitlist-card">
+                <h2>Be the First to Experience OneEaze</h2>
+                <p>Join our exclusive waitlist and get early access with special launch benefits</p>
+                <form id="waitlist-form" class="waitlist-form">
+                    <div class="form-group">
+                        <input type="text" id="name" placeholder="Your Name" required>
+                        <i class="fas fa-user"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" placeholder="Your Email" required>
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" placeholder="Phone Number">
+                        <i class="fas fa-phone"></i>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-large">
+                        <i class="fas fa-rocket"></i>
+                        Join Waitlist
+                    </button>
+                </form>
+                <div class="waitlist-benefits">
+                    <div class="benefit">
+                        <i class="fas fa-gift"></i>
+                        <span>Early Access</span>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-percent"></i>
+                        <span>Launch Discount</span>
+                    </div>
+                    <div class="benefit">
+                        <i class="fas fa-star"></i>
+                        <span>Exclusive Offers</span>
+                    </div>
+                </div>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer class="footer">
-        <p>&copy; 2024 OneEaze. All rights reserved.</p>
-        <p>Your all-in-one super app solution</p>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <i class="fas fa-rocket"></i>
+                        <span>OneEaze</span>
+                    </div>
+                    <p>Your all-in-one super app for shopping, food delivery, and digital payments.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin"></i></a>
+                    </div>
+                </div>
+                <div class="footer-section">
+                    <h4>Services</h4>
+                    <a href="#">E-Commerce</a>
+                    <a href="#">Food Delivery</a>
+                    <a href="#">Digital Payments</a>
+                    <a href="#">Bill Payments</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Company</h4>
+                    <a href="#">About Us</a>
+                    <a href="#">Careers</a>
+                    <a href="#">Contact</a>
+                    <a href="#">Privacy Policy</a>
+                </div>
+                <div class="footer-section">
+                    <h4>Download</h4>
+                    <div class="download-buttons">
+                        <button class="download-btn">
+                            <i class="fab fa-apple"></i>
+                            <div>
+                                <span>Download on the</span>
+                                <strong>App Store</strong>
+                            </div>
+                        </button>
+                        <button class="download-btn">
+                            <i class="fab fa-google-play"></i>
+                            <div>
+                                <span>Get it on</span>
+                                <strong>Google Play</strong>
+                            </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <p>&copy; 2024 OneEaze. All rights reserved. | <span id="current-year"></span></p>
+            </div>
+        </div>
     </footer>
 
-    <script>
-        // Simple email collection (for demonstration)
-        document.querySelector('.waitlist-btn').addEventListener('click', function() {
-            const email = document.querySelector('input[type="email"]').value;
-            if(email) {
-                alert('Thank you! We will notify you at: ' + email);
-                document.querySelector('input[type="email"]').value = '';
-            }
-        });
-    </script>
+    <!-- Demo Modal -->
+    <div id="demo-modal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeDemo()">&times;</span>
+            <h3>OneEaze App Demo</h3>
+            <div class="demo-video">
+                <p>🚀 Demo video coming soon!</p>
+                <p>Experience the future of all-in-one convenience</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
 </body>
 </html>
