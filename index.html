@@ -60,17 +60,20 @@
             gap: 10px;
         }
 
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border-radius: 50%;
+        .logo-image {
+            width: 50px;
+            height: 50px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .logo-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .logo-text {
@@ -540,6 +543,69 @@
             font-size: 14px;
         }
 
+        /* Logo Upload Area */
+        .logo-upload {
+            background-color: var(--light);
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        .upload-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--gray-light);
+            border-radius: 10px;
+            padding: 40px 20px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background-color: rgba(37, 99, 235, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 48px;
+            color: var(--gray);
+            margin-bottom: 15px;
+        }
+
+        .upload-area p {
+            color: var(--gray);
+            margin-bottom: 10px;
+        }
+
+        .upload-btn {
+            background-color: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .logo-preview {
+            margin-top: 20px;
+            display: none;
+        }
+
+        .logo-preview img {
+            max-width: 200px;
+            max-height: 100px;
+            object-fit: contain;
+        }
+
         /* Responsive Styles */
         @media (max-width: 768px) {
             .nav-links {
@@ -576,7 +642,10 @@
         <div class="container">
             <div class="header-top">
                 <div class="logo">
-                    <div class="logo-icon">O</div>
+                    <div class="logo-image">
+                        <!-- Your logo will appear here after upload -->
+                        <img id="header-logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiByeD0iMTAiIGZpbGw9IiMyNTYzZWIiLz4KPHBhdGggZD0iTTE1IDIwTDI1IDMwTDM1IDIwIiBzdHJva2U9IndoaXRlIiBzdHJva2Utd2lkdGg9IjMiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K" alt="OneEaze Logo">
+                    </div>
                     <div class="logo-text">OneEaze</div>
                 </div>
                 <nav class="nav-links">
@@ -592,6 +661,29 @@
             </div>
         </div>
     </header>
+
+    <!-- Logo Upload Section -->
+    <section class="logo-upload">
+        <div class="container">
+            <div class="upload-container">
+                <h2>Add Your Custom Logo</h2>
+                <p>Upload your logo to replace the default OneEaze logo</p>
+                
+                <div class="upload-area" id="uploadArea">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <p>Click to upload your logo</p>
+                    <p style="font-size: 14px;">Supported formats: JPG, PNG, SVG (Max 2MB)</p>
+                    <input type="file" id="logoUpload" accept="image/*" style="display: none;">
+                    <button class="upload-btn" onclick="document.getElementById('logoUpload').click()">Choose File</button>
+                </div>
+                
+                <div class="logo-preview" id="logoPreview">
+                    <p>Logo Preview:</p>
+                    <img id="previewImage" src="" alt="Logo Preview">
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -727,7 +819,9 @@
                             <div class="screen-content">
                                 <div class="app-header">
                                     <div class="logo" style="font-size: 18px;">
-                                        <div class="logo-icon" style="width: 30px; height: 30px; font-size: 16px;">O</div>
+                                        <div class="logo-image" style="width: 30px; height: 30px;">
+                                            <img id="app-logo" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIHZpZXdCb3g9IjAgMCAzMCAzMCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiByeD0iNiIgZmlsbD0iIzI1NjNlYiIvPgo8cGF0aCBkPSJNOSAxMkwxNSAxOEwyMSAxMiIgc3Ryb2tlPSJ3aGl0ZSIgc3Ryb2tlLXdpZHRoPSIyIiBzdHJva2UtbGluZWNhcD0icm91bmQiIHN0cm9rZS1saW5lam9pbj0icm91bmQiLz4KPC9zdmc+Cg==" alt="OneEaze Logo">
+                                        </div>
                                         <div class="logo-text" style="font-size: 18px;">OneEaze</div>
                                     </div>
                                     <i class="fas fa-bell"></i>
@@ -862,8 +956,46 @@
     </footer>
 
     <script>
-        // Simple script for tab switching in the app demo
+        // Logo upload functionality
         document.addEventListener('DOMContentLoaded', function() {
+            const logoUpload = document.getElementById('logoUpload');
+            const headerLogo = document.getElementById('header-logo');
+            const appLogo = document.getElementById('app-logo');
+            const logoPreview = document.getElementById('logoPreview');
+            const previewImage = document.getElementById('previewImage');
+            const uploadArea = document.getElementById('uploadArea');
+            
+            // Handle file selection
+            logoUpload.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        const logoUrl = e.target.result;
+                        
+                        // Update logos throughout the site
+                        headerLogo.src = logoUrl;
+                        appLogo.src = logoUrl;
+                        previewImage.src = logoUrl;
+                        
+                        // Show preview
+                        logoPreview.style.display = 'block';
+                        
+                        // Change upload area appearance
+                        uploadArea.innerHTML = `
+                            <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                            <p>Logo uploaded successfully!</p>
+                            <p style="font-size: 14px;">Click to change logo</p>
+                            <button class="upload-btn" onclick="document.getElementById('logoUpload').click()">Change Logo</button>
+                        `;
+                    };
+                    
+                    reader.readAsDataURL(file);
+                }
+            });
+            
+            // Simple script for tab switching in the app demo
             const tabs = document.querySelectorAll('.app-tab');
             
             tabs.forEach(tab => {
